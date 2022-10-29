@@ -20,6 +20,9 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != '__class__':
                     self.__dict__[key] = value
+        else:
+            storage.new(self)
+        
 
     def __str__(self):
         """String representation for our class"""
@@ -39,4 +42,5 @@ class BaseModel:
         self.__dict__['__class__'] = type(self).__name__
         self.__dict__['created_at'] = self.created_at.isoformat()
         self.__dict__['updated_at'] = self.updated_at.isoformat()
+        print(self.__dict__)
         return self.__dict__
