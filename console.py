@@ -1,6 +1,11 @@
 #!/usr/bin/python3
-"""Entry point for the console"""
+"""Entry point for tfrom modelshe console"""
+from models.base_model import BaseModel
+from models import base_model
+from models.engine.file_storage import FileStorage
 import cmd
+import inspect
+import models
 
 
 class HBNBCommand(cmd.Cmd):
@@ -30,6 +35,20 @@ class HBNBCommand(cmd.Cmd):
 
         self.close()
         return True
+
+    def do_create(self, arg):
+        """Creates a new instance of BaseModel class and saves it"""
+
+        my_module_classes = list(x[0] for x in inspect.getmembers(base_model, inspect.isclass))
+        print(my_module_classes)
+        if arg == "" :
+            print("** class name missing **")
+        elif arg not in my_module_classes:
+            print("** class doesn't exist **")
+        else:
+            self.arg = BaseModel()
+            self.arg.save()
+            print(self.arg.id)
 
 
 if __name__ == '__main__':
