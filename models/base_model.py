@@ -2,7 +2,7 @@
 """Contains a BaseModel class"""
 
 
-from models import storage
+import models
 import datetime
 import uuid
 
@@ -13,15 +13,17 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Instantiation method for our class"""
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now()
-        self.updated_at = datetime.datetime.now()
         if len(kwargs) != 0:
             for key, value in kwargs.items():
                 if key != '__class__':
                     self.__dict__[key] = value
+                if key in ('created_at', 'updated_at'):
+                    self.__dict__[key] = datetime.datetime.fromisoformat(value)
         else:
-            storage.new(self)
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.datetime.now()
+            self.updated_at = datetime.datetime.now()
+            models.storage.new(self)
         
 
     def __str__(self):
@@ -34,7 +36,7 @@ class BaseModel:
         """Updates updated_at with the current datetime"""
 
         self.updated_at = datetime.datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """Returns a dictionary of all keys/values of __dict__ of instance"""
