@@ -22,21 +22,20 @@ class FileStorage:
 
     def new(self, obj):
         """Sets in __objects the obj with key <obj class name>.id"""
-        self.__objects[type(obj).__name__+ '.' + obj.id] = obj
+        self.__objects[type(obj).__name__+ '.' + obj.id] = obj.to_dict()
         
     def save(self):
         """Serializes __objects to the JSON file"""
 
         with open(self.__file_path, "w", encoding='utf-8') as jsonfile:
-            for value in self.__objects.values():
-                json.dump(value.to_dict(), jsonfile)
+                json.dump(self.__objects, jsonfile)
 
     def reload(self):
         """Deserializes the JSON file to __objects"""
 
         if os.path.exists(self.__file_path):
             with open(self.__file_path, "r", encoding='utf-8') as jsonfile:
-                self.__objects = json.loads(jsonfile)
+                self.__objects = json.load(jsonfile )
         else:
             pass
 
